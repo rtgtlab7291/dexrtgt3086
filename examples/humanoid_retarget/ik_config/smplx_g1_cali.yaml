@@ -1,0 +1,167 @@
+# SMPL-X to Unitree G1 retargeting configuration (calibrated).
+# Quaternions are scalar-first (w, x, y, z).
+
+urdf_path: ../../../assets/robot_description/unitree_g1/g1_custom_collision_29dof.urdf
+
+human_root_name: pelvis
+robot_root_name: pelvis
+human_height_assumption: 1.66
+ground_height: 0.0
+
+# Solver parameters
+position_limit_weight: 30.0
+
+# Per-joint smoothness: [left_leg(6), right_leg(6), waist(3), left_arm(7), right_arm(7)]
+smoothness_weight:
+  [25, 20, 15, 45, 10, 10,
+   25, 20, 15, 45, 10, 10,
+   100, 100, 100,
+   35, 25, 10, 13, 5, 5, 5,
+   35, 25, 10, 13, 5, 5, 5]
+
+base_smoothness_weight: 1.5
+smoothness_cost_threshold: 100.0
+smoothness_min_scale: 0.3
+
+# Per-joint rest weight: high on shoulder_pitch to prevent bifurcation flips
+rest_weight:
+  [0.5, 0.5, 0.0, 0.0, 0.0, 0.0,
+   0.5, 0.5, 0.0, 0.0, 0.0, 0.0,
+   0.0, 0.0, 0.0,
+   15, 5, 0.5, 0.0, 0.0, 0.0, 0.0,
+   15, 5, 0.5, 0.0, 0.0, 0.0, 0.0]
+
+velocity_limit_weight: 0.2
+velocity_limit_dt: 0.03333333
+velocity_clamp_scale: 0.8
+
+# Per-joint velocity limits (rad/s) for retargeting; overrides URDF motor limits.
+# Joint order: [left_leg(6), right_leg(6), waist(3), left_arm(7), right_arm(7)]
+velocity_limit_override:
+  [12, 12, 12, 12, 8, 8,
+   12, 12, 12, 12, 8, 8,
+   4, 4, 4,
+   12, 12, 12, 12, 12, 12, 12,
+   12, 12, 12, 12, 12, 12, 12]
+
+stages:
+  - {num_seeds: 4, iters: 6, lm_lambda: 1.5}
+  - {num_seeds: 1, iters: 3, lm_lambda: 1.5}
+
+
+scale_table:
+  pelvis: 1.0714
+  spine3: 0.8526
+
+  left_hip: 0.9269
+  right_hip: 0.9265
+  left_knee: 0.8395
+  right_knee: 0.8389
+  left_foot: 0.8178
+  right_foot: 0.8087
+
+  left_shoulder: 0.8143
+  right_shoulder: 0.8161
+  left_elbow: 0.7785
+  right_elbow: 0.7761
+  left_wrist: 0.7444
+  right_wrist: 0.7444
+
+link_mapping:
+  pelvis:
+    human_joint: pelvis
+    position_weight: 2000
+    orientation_weight: 600
+    position_offset: [-0.0021, -0.0006, 0.0601]
+    rotation_offset: [0.5, -0.5, -0.5, -0.5]
+
+  left_hip_roll_link:
+    human_joint: left_hip
+    position_weight: 10
+    orientation_weight: 15
+    position_offset: [0.0112, 0.0511, -0.0075]
+    rotation_offset: [0.4267755048530407, -0.5637931078484661, -0.5637931078484661, -0.4267755048530407]
+
+  left_knee_link:
+    human_joint: left_knee
+    position_weight: 10
+    orientation_weight: 15
+    position_offset: [0.0094, 0.0211, 0.0095]
+    rotation_offset: [0.5, -0.5, -0.5, -0.5]
+
+  left_toe_link:
+    human_joint: left_foot
+    position_weight: 100
+    orientation_weight: 50
+    position_offset: [0.0555, 0.0221, 0.052]
+    rotation_offset: [-0.5, 0.5, 0.5, 0.5]
+
+  right_hip_roll_link:
+    human_joint: right_hip
+    position_weight: 10
+    orientation_weight: 15
+    position_offset: [0.0052, -0.0499, 0.0099]
+    rotation_offset: [0.4267755048530407, -0.5637931078484661, -0.5637931078484661, -0.4267755048530407]
+
+  right_knee_link:
+    human_joint: right_knee
+    position_weight: 10
+    orientation_weight: 15
+    position_offset: [0.0078, -0.0228, 0.004]
+    rotation_offset: [0.5, -0.5, -0.5, -0.5]
+
+  right_toe_link:
+    human_joint: right_foot
+    position_weight: 100
+    orientation_weight: 50
+    position_offset: [0.043, -0.0134, 0.0433]
+    rotation_offset: [-0.5, 0.5, 0.5, 0.5]
+
+  torso_link:
+    human_joint: spine3
+    position_weight: 0
+    orientation_weight: 30
+    position_offset: [-0.0006, 0.0012, -0.0501]
+    rotation_offset: [0.5, -0.5, -0.5, -0.5]
+
+  left_shoulder_yaw_link:
+    human_joint: left_shoulder
+    position_weight: 30
+    orientation_weight: 45
+    position_offset: [0.01, -0.0217, -0.0606]
+    rotation_offset: [0.70710678, 0.0, -0.70710678, 0.0]
+
+  left_elbow_link:
+    human_joint: left_elbow
+    position_weight: 30
+    orientation_weight: 45
+    position_offset: [-0.0103, 0.0212, 0.039]
+    rotation_offset: [1.0, 0.0, 0.0, 0.0]
+
+  left_wrist_yaw_link:
+    human_joint: left_wrist
+    position_weight: 30
+    orientation_weight: 45
+    position_offset: [-0.0282, -0.028, 0.0727]
+    rotation_offset: [1.0, 0.0, 0.0, 0.0]
+
+  right_shoulder_yaw_link:
+    human_joint: right_shoulder
+    position_weight: 30
+    orientation_weight: 45
+    position_offset: [0.0143, 0.0194, -0.0649]
+    rotation_offset: [0.0, 0.70710678, 0.0, 0.70710678]
+
+  right_elbow_link:
+    human_joint: right_elbow
+    position_weight: 30
+    orientation_weight: 45
+    position_offset: [-0.0181, -0.0099, 0.0331]
+    rotation_offset: [0.0, 0.0, 0.0, -1.0]
+
+  right_wrist_yaw_link:
+    human_joint: right_wrist
+    position_weight: 30
+    orientation_weight: 45
+    position_offset: [-0.0346, 0.0214, 0.0784]
+    rotation_offset: [0.0, 0.0, 0.0, -1.0]

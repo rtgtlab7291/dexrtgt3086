@@ -1,0 +1,134 @@
+# SMPL-X to Berkeley Humanoid Lite retargeting configuration.
+# Quaternions are scalar-first (w, x, y, z).
+# Converted from smplx_to_bhl.json (ik_match_table1).
+
+urdf_path: ../../../assets/robot_description/berkeley_humanoid_lite/berkeley_humanoid_lite.urdf
+
+human_root_name: pelvis
+robot_root_name: base
+human_height_assumption: 1.66
+ground_height: 0.0
+
+# Per-joint smoothness (22 DOFs):
+# Joint order: left_arm(5: elbow_roll, elbow_pitch, shoulder_yaw, shoulder_roll, shoulder_pitch),
+#              right_arm(5: same), left_leg(6: ankle_roll, ankle_pitch, knee_pitch, hip_pitch, hip_yaw, hip_roll),
+#              right_leg(6: same)
+smoothness_weight:
+  [15, 20, 15, 45, 10,  # left arm: elbow_roll, elbow_pitch, shoulder_yaw, shoulder_roll, shoulder_pitch
+   15, 20, 15, 45, 10,  # right arm
+   25, 15, 5, 13, 5, 5,  # left leg: ankle_roll, ankle_pitch, knee_pitch, hip_pitch, hip_yaw, hip_roll
+   25, 15, 5, 13, 5, 5]  # right leg
+
+base_smoothness_weight: 1.5
+smoothness_cost_threshold: 100.0
+smoothness_min_scale: 0.3
+
+# Per-joint rest weight: high on shoulder_pitch to prevent bifurcation flips
+rest_weight: 0.1
+velocity_limit_weight: 0.2
+velocity_limit_dt: 0.03333333
+velocity_clamp_scale: 0.8
+
+# Per-joint velocity limits (rad/s) for retargeting; overrides URDF motor limits.
+# Joint order: left_arm(5), right_arm(5), left_leg(6), right_leg(6)
+velocity_limit_override:
+  [12, 12, 12, 12, 12,  # left arm
+   12, 12, 12, 12, 12,  # right arm
+   12, 12, 12, 12, 8, 8,  # left leg
+   12, 12, 12, 12, 8, 8]  # right leg
+
+stages:
+  - {num_seeds: 4, iters: 6, lm_lambda: 1.5}
+  - {num_seeds: 1, iters: 3, lm_lambda: 1.5}
+
+
+scale_table:
+  pelvis: 0.5
+  left_hip: 0.5
+  right_hip: 0.5
+  left_knee: 0.5
+  right_knee: 0.5
+  left_foot: 0.5
+  right_foot: 0.5
+  left_elbow: 0.8
+  right_elbow: 0.8
+  left_wrist: 0.8
+  right_wrist: 0.8
+
+link_mapping:
+  imu_2:
+    human_joint: pelvis
+    position_weight: 100
+    orientation_weight: 10
+    position_offset: [0.08, 0.0, 0.2]
+    rotation_offset: [0.5, -0.5, -0.5, -0.5]
+
+  leg_left_hip_roll:
+    human_joint: left_hip
+    position_weight: 1
+    orientation_weight: 1
+    position_offset: [0.0, 0.0, 0.0]
+    rotation_offset: [0.0, 0.707, 0.0, 0.707]
+
+  leg_left_knee_pitch:
+    human_joint: left_knee
+    position_weight: 0
+    orientation_weight: 1
+    position_offset: [0.0, 0.0, 0.0]
+    rotation_offset: [0.707, 0.0, -0.707, 0.0]
+
+  leg_left_ankle_roll:
+    human_joint: left_foot
+    position_weight: 100
+    orientation_weight: 10
+    position_offset: [-0.05, 0.0, 0.0]
+    rotation_offset: [0.0, 0.0, 0.0, 1.0]
+
+  leg_right_hip_roll:
+    human_joint: right_hip
+    position_weight: 1
+    orientation_weight: 1
+    position_offset: [0.0, 0.0, 0.0]
+    rotation_offset: [0.0, 0.707, 0.0, 0.707]
+
+  leg_right_knee_pitch:
+    human_joint: right_knee
+    position_weight: 0
+    orientation_weight: 1
+    position_offset: [0.0, 0.0, 0.0]
+    rotation_offset: [0.0, 0.707, 0.0, 0.707]
+
+  leg_right_ankle_roll:
+    human_joint: right_foot
+    position_weight: 100
+    orientation_weight: 10
+    position_offset: [0.05, 0.0, 0.0]
+    rotation_offset: [0.0, 0.0, 0.0, 1.0]
+
+  arm_left_elbow_pitch:
+    human_joint: left_elbow
+    position_weight: 1
+    orientation_weight: 10
+    position_offset: [0.0, 0.0, 0.0]
+    rotation_offset: [0.5, 0.5, 0.5, -0.5]
+
+  arm_left_hand_link:
+    human_joint: left_wrist
+    position_weight: 50
+    orientation_weight: 10
+    position_offset: [0.0, 0.0, 0.0]
+    rotation_offset: [0.707, 0.0, -0.707, 0.0]
+
+  arm_right_elbow_pitch:
+    human_joint: right_elbow
+    position_weight: 1
+    orientation_weight: 10
+    position_offset: [0.0, 0.0, 0.0]
+    rotation_offset: [0.5, 0.5, -0.5, 0.5]
+
+  arm_right_hand_link:
+    human_joint: right_wrist
+    position_weight: 50
+    orientation_weight: 10
+    position_offset: [0.0, 0.0, 0.0]
+    rotation_offset: [0.707, 0.0, 0.707, 0.0]
